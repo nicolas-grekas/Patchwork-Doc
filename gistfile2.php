@@ -1,3 +1,5 @@
+<?php
+
 function parseQuery($query)
 {
     $fields = array();
