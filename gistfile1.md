@@ -106,7 +106,7 @@ Pour résumer la section précédente, l'interface fournie par PHP souffre des d
 4. Accès aux données brutes :
   1. aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes,
   2. les données qui alimentent `$_GET` et `$_COOKIE` sont dans `$_SERVER`,
-  3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que multipart/form-data.
+  3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que *multipart/form-data*.
 
 Le point 1.1 est soluble de façon trivial en détruisant la variable le plus tôt possible pour éviter toute tentation de s'en servir. De toute façon, la portabilité de `$_REQUEST` est limitée par le *php.ini*.
 
