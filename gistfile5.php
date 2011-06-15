@@ -1,11 +1,11 @@
 <?php
 
-use Patchwork\HttpQueryField;
+use Patchwork\HttpQueryField as Field;
 
-$field = new HttpQueryField('foo[bar][]');
+$field = new Field('foo[bar][]');
 $values = $field->getValues($_GET);
 $single_value = end($values);
 // or
-$values = HttpQueryField::getNew('foo[bar][]')->getValues($_GET);
+$values = Field::getNew('foo[bar][]')->getValues($_GET);
 // or
-$single_value = end(HttpQueryField::getNew('foo[bar][]')->getValues($_GET));
+$single_value = end(Field::getNew('foo[bar][]')->getValues($_GET));
