@@ -93,28 +93,28 @@ Problèmes et (fausses) solutions
 Pour résumer la section précédente, l'interface fournie par PHP souffre des défauts suivants :
 
 1. `$_REQUEST` :
-  a) mélange contextes sources différents, ne devrait jamais être utilisé.
+  1. mélange contextes sources différents, ne devrait jamais être utilisé.
 2. `$_SERVER` :
-  a) mise en majuscules et suppression de caractères particuliers du nom des entêtes,
-  b) collision de nom pour les entêtes répétées,
-  c) dépendance sur le serveur web pour transmettre le contexte de la requête via les variables d'environnement.
+  1. mise en majuscules et suppression de caractères particuliers du nom des entêtes,
+  2. collision de nom pour les entêtes répétées,
+  3. dépendance sur le serveur web pour transmettre le contexte de la requête via les variables d'environnement.
 3. `$_GET`, `$_COOKIE`, `$_POST`, `$_FILES` :
-  a) altération de caractères particuliers du nom des clefs,
-  b) collision de nom pour les clefs à valeurs multiples,
-  c) collision non-sémantique créée par la syntaxe à crochets et par les points 2.a et 3.a,
-  d) complexité apportée par la syntaxe à crochets.
+  1. altération de caractères particuliers du nom des clefs,
+  2. collision de nom pour les clefs à valeurs multiples,
+  3. collision non-sémantique créée par la syntaxe à crochets et par les points 2.a et 3.a,
+  4. complexité apportée par la syntaxe à crochets.
 4. Accès aux données brutes :
-  a) aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes,
-  b) les données qui alimentent `$_GET` et `$_COOKIE` sont dans `$_SERVER`,
-  c) `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que multipart/form-data.
+  1. aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes,
+  2. les données qui alimentent `$_GET` et `$_COOKIE` sont dans `$_SERVER`,
+  3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que multipart/form-data.
 
-Le point 1.a est soluble de façon trivial en détruisant la variable le plus tôt possible pour éviter toute tentation de s'en servir. De toute façon, la portabilité de `$_REQUEST` est limitée par le *php.ini*.
+Le point 1.1 est soluble de façon trivial en détruisant la variable le plus tôt possible pour éviter toute tentation de s'en servir. De toute façon, la portabilité de `$_REQUEST` est limitée par le *php.ini*.
 
-Le point 4.a rend impossible toute tentative d'améliorer les défauts 2.a et 2.b. Le point 2.c est inhérent à la manière de fonctionner de PHP.
+Le point 4.1 rend impossible toute tentative d'améliorer les défauts 2.1 et 2.2. Le point 2.3 est inhérent à la manière de fonctionner de PHP.
 
-Si le point 4.c est avéré, alors une modification du *Content-Type: multipart/form-data* par le serveur web pourrait permettre de contourner l'opacité de PHP pour ce type particulier. Pourtant, cette solution nécessite de réécrire et surtout d'exécuter en PHP l'interprétation du contenu. Lorsqu'un fichier lourd est transféré, il est gênant de monopoliser ainsi un processus serveur. De plus, elle a peu de chance d'être portable car elle nécessite de modifier la configuration du serveur web. Cette solution semble donc peu viable.
+Si le point 4.3 est avéré, alors une modification du *Content-Type: multipart/form-data* par le serveur web pourrait permettre de contourner l'opacité de PHP pour ce type particulier. Pourtant, cette solution nécessite de réécrire et surtout d'exécuter en PHP l'interprétation du contenu. Lorsqu'un fichier lourd est transféré, il est gênant de monopoliser ainsi un processus serveur. De plus, elle a peu de chance d'être portable car elle nécessite de modifier la configuration du serveur web. Cette solution semble donc peu viable.
 
-Si 4.c n'est pas opérationnel, les données altérées présentes dans `£_POST` et `$_FILES` sont les seules à disposition pour accéder aux données de formulaires. Par soucis d'homogénéité et accessoirement de performance, et ce malgré 4.b, reconstruire un équivalent à `$_GET` et `$_COOKIE` à partir de leurs données brutes ne semble pas non plus une bonne idée. Voici cependant une implémentation qui permet d'analyser une chaîne brute telle que `$_SERVER['HTTP_COOKIE']` :
+Si 4.3 n'est pas opérationnel, les données altérées présentes dans `£_POST` et `$_FILES` sont les seules à disposition pour accéder aux données de formulaires. Par soucis d'homogénéité et accessoirement de performance, et ce malgré 4.2, reconstruire un équivalent à `$_GET` et `$_COOKIE` à partir de leurs données brutes ne semble pas non plus une bonne idée. Voici cependant une implémentation qui permet d'analyser une chaîne brute telle que `$_SERVER['HTTP_COOKIE']` :
 
 
 ```php
@@ -140,12 +140,12 @@ function parseQuery($query)
 
 Enfin, pour ne pas casser l'interface actuelle, la documentation et les habitudes qui vont avec, les variables `$_GET`, `$_COOKIE`, `$_POST` ou `$_FILES` devraient être conservées dans leur état d'origine défini par PHP.
 
-La solution recherchée doit donc permettre de mitiger les défauts 3.a, b, c et d en utilisant `$_GET`, `$_COOKIE`, `$_POST` et `$_FILES` comme données sources, sans les modifier. À titre corollaire, l'accès aux données en PHP et en HTML devrait s'effectuer en utilisant exactement les mêmes clefs.
+La solution recherchée doit donc permettre de mitiger les défauts 3.1, 3.2, 3.3 et 3.4 en utilisant `$_GET`, `$_COOKIE`, `$_POST` et `$_FILES` comme données sources, sans les modifier. À titre corollaire, l'accès aux données en PHP et en HTML devrait s'effectuer en utilisant exactement les mêmes clefs.
 
 Normalisation des clefs
 -----------------------
 
-Dans l'absolu, le point 3.a n'est pas une limitation très contraignante. En effet, les clefs prises en compte sont de toute façon déjà connues par l'application qui en a besoin. Elles ne portent aucune information autre que l'étiquetage de données de formulaire. Le réel problème est que 3.a introduit une différence potentielle entre la façon de nommer des champs en HTML, et la façon d'y accéder en PHP. Par exemple, un champs HTML nommé `foo.bar` sera accessible via `$_GET['foo_bar']`. La solution de 3.a est donc assez simple : il suffit d'éviter tous les noms de clefs qui introduisent une différence entre la façon d'adresser un champs en HTML et en PHP. Cette solution résout également 3.c.
+Dans l'absolu, le point 3.1 n'est pas une limitation très contraignante. En effet, les clefs prises en compte sont de toute façon déjà connues par l'application qui en a besoin. Elles ne portent aucune information autre que l'étiquetage de données de formulaire. Le réel problème est que 3.1 introduit une différence potentielle entre la façon de nommer des champs en HTML, et la façon d'y accéder en PHP. Par exemple, un champs HTML nommé `foo.bar` sera accessible via `$_GET['foo_bar']`. La solution de 3.1 est donc assez simple : il suffit d'éviter tous les noms de clefs qui introduisent une différence entre la façon d'adresser un champs en HTML et en PHP. Cette solution résout également 3.3.
 
 Syntaxe à crochets entre parenthèses quelques instants, la transformation effectuée par PHP est plus compliquée qu'un simple rechercher/remplacer. Par exemple, un « . » n'est remplacé par un « _ » que s'il n'est pas précédé par un « [ », etc. Heureusement, la fonction `parse_str()` nous permet de tester et surtout de reproduire ce comportement en PHP. Pour vérifier qu'un nom de clef est acceptable par PHP, il suffit d'utiliser `parse_str()` ainsi :
 
@@ -164,7 +164,7 @@ echo isset($array_result[$key_name])
 ?>
 ```
 
-La collision 3.b pour les clefs à valeurs multiples ne peut être contournée qu'en utilisant des crochets vides dans le nom des clefs. La fonction `parse_str()` nous permet à nouveau d'accéder à ce comportement en faisant abstraction des spécificités d'implémentation. Pour tester si une clef particulière permet de gérer les valeurs multiples, il est ainsi possible d'envisager le code suivant : ::
+La collision 3.2 pour les clefs à valeurs multiples ne peut être contournée qu'en utilisant des crochets vides dans le nom des clefs. La fonction `parse_str()` nous permet à nouveau d'accéder à ce comportement en faisant abstraction des spécificités d'implémentation. Pour tester si une clef particulière permet de gérer les valeurs multiples, il est ainsi possible d'envisager le code suivant :
 
 ```php
 <?php
@@ -219,12 +219,12 @@ function test_query_key_name($key_name, &$multivalues_capable = null)
 ?>
 ```
 
-Cette fonction permet de tester si un nom de clef est acceptable en PHP, s'il permet d'accepter des valeurs multiples et prend en charge la syntaxe à crochets (elle illustre aussi très bien l'inutile complexité apportée par cette syntaxe). Si chaque nom de clef utilisé par une application vérifie ce test, alors les points 3.a, b et c sont résolus.
+Cette fonction permet de tester si un nom de clef est acceptable en PHP, s'il permet d'accepter des valeurs multiples et prend en charge la syntaxe à crochets (elle illustre aussi très bien l'inutile complexité apportée par cette syntaxe). Si chaque nom de clef utilisé par une application vérifie ce test, alors les points 3.1, 3.2 et 3.3 sont résolus.
 
 Accès par clefs littérales
 --------------------------
 
-Le point 3.d est le dernier à résoudre : il s'agit d'accéder aux données présentes dans `$_GET`, `$_COOKIE`, `$_POST` ou `$_FILES` (ou de façon plus générale, un tableau construit par `parse_str()`) en utilisant directement la version littérale des clefs.
+Le point 3.4 est le dernier à résoudre : il s'agit d'accéder aux données présentes dans `$_GET`, `$_COOKIE`, `$_POST` ou `$_FILES` (ou de façon plus générale, un tableau construit par `parse_str()`) en utilisant directement la version littérale des clefs.
 
 La fonction que nous cherchons à créer prend donc au moins deux paramètres en entrée : le nom littéral `$key_name` de la clef recherchée et une collection `$input_array` de valeurs construite par `parse_str()`. Elle retourne une liste de valeurs présentes dans $input_array qui correspondent à la clef `$key_name`. Dans le cas où `$key_name` ne serait pas autorisé par PHP (cf ci-dessus), la fonction pourrait retourner `false` ou bien générer une exception :
 
