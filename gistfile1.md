@@ -147,7 +147,7 @@ Normalisation des clefs
 
 Dans l'absolu, le point 3.1 n'est pas une limitation très contraignante. En effet, les clefs prises en compte sont de toute façon déjà connues par l'application qui en a besoin. Elles ne portent aucune information autre que l'étiquetage de données de formulaire. Le réel problème est que 3.1 introduit une différence potentielle entre la façon de nommer des champs en HTML, et la façon d'y accéder en PHP. Par exemple, un champs HTML nommé `foo.bar` sera accessible via `$_GET['foo_bar']`. La solution de 3.1 est donc assez simple : il suffit d'éviter tous les noms de clefs qui introduisent une différence entre la façon d'adresser un champs en HTML et en PHP. Cette solution résout également 3.3.
 
-Syntaxe à crochets entre parenthèses quelques instants, la transformation effectuée par PHP est plus compliquée qu'un simple rechercher/remplacer. Par exemple, un « . » n'est remplacé par un « _ » que s'il n'est pas précédé par un « [ », etc. Heureusement, la fonction `parse_str()` nous permet de tester et surtout de reproduire ce comportement en PHP. Pour vérifier qu'un nom de clef est acceptable par PHP, il suffit d'utiliser `parse_str()` ainsi :
+Syntaxe à crochets entre parenthèses quelques instants, la transformation effectuée par PHP est plus compliquée qu'un simple rechercher/remplacer. Par exemple, un `.` n'est remplacé par un `_` que s'il n'est pas précédé par un `[`, etc. Heureusement, la fonction `parse_str()` nous permet de tester et surtout de reproduire ce comportement en PHP. Pour vérifier qu'un nom de clef est acceptable par PHP, il suffit d'utiliser `parse_str()` ainsi :
 
 ```php
 <?php
