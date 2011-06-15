@@ -1,16 +1,10 @@
 <?php
 
-function parseQuery($query)
-{
-    $fields = array();
+$key_name = 'foo.bar';
+$query_str = rawurlencode($key_name);
+parse_str($query_str, $array_result);
 
-    foreach (explode('&', $query) as $q)
-    {
-        $q = explode('=', $q, 2);
-        if ('' === $q[0]) continue;
-        $q = array_map('urldecode', $q);
-        $fields[$q[0]][] = isset($q[1]) ? $q[1] : '';
-    }
-
-    return $fields;
-}
+// KO in this example, foo.bar becomes foo_bar 
+echo isset($array_result[$key_name])
+    ? 'OK: PHP and HTML key addressing is identical'
+    : 'KO: key contains specials characters for PHP';
