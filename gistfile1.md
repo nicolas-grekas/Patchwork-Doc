@@ -2,6 +2,8 @@
 Enhancing PHP handling of HTTP requests
 =======================================
 
+Version française : https://gist.github.com/1027180
+
 Introduction
 ============
 
