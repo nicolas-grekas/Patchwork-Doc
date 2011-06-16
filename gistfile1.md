@@ -1,6 +1,6 @@
-=======================================
-Enhancing PHP handling of HTTP requests
-=======================================
+=========================================
+Improved handling of HTTP requests in PHP
+=========================================
 
 Version française : https://gist.github.com/1027180
 
