@@ -44,7 +44,7 @@ Cookies and URL parameters
 
 The *Cookie* header and the URL parameters contain themselves key/value pairs that are available for more comfort with `$_COOKIE` and `$_GET` respectively. The algorithm to go from raw string to an array is exposed by `parse_str()`, which allows for easy observation of the operation:
 
-As with headers, some non-alphanumeric characters of the keys are replaced with an underscore or deleted, the case is preserved, but the unicity of keys still applies. As is common here to need multiple values ​​of the same key, PHP allows you to create tables from scalar data sources using brackets in the name of the keys. This trick allows to circumvent the unicity limitation by combining all the values ​​of the same key in a table. This syntax can also appoint key to create an array of arrays, in the hope that this makes life easier for developers.
+As with headers, some non-alphanumeric characters of the keys are replaced with an underscore or deleted, the case is preserved, but the unicity of keys still applies. As is common here to need multiple values ​​of the same key, PHP allows you to create arrays from scalar data sources using brackets in the name of the keys. This trick allows to circumvent the unicity limitation by combining all the values ​​of the same key in an array. This syntax can also appoint key to create an array of arrays, in the hope that this makes life easier for developers.
 For example:
 
 ```php
@@ -73,7 +73,7 @@ Other content is possible, eg JSON or XML for some web-services (server to serve
 
 The type *multipart/form-data* is opaque to PHP developers: only `$_POST` and `$_FILES` are available, without any access to raw data. Other types of content are accessible via the `php://stdin` stream. This point remains to be verified by testing the various SAPI (Apache module, FastCGI, CGI, etc.).
 
-How these tables are filled is identical to that described above (specific characters altered, brackets in the name of the keys, collisions). They therefore suffer the same defects.
+How these arrays are filled is identical to that described above (specific characters altered, brackets in the name of the keys, collisions). They therefore suffer the same defects.
 
 Bracketed syntax: an unnecessary complexity
 -------------------------------------------
@@ -225,7 +225,7 @@ This function can test if a key name is acceptable in PHP, if it can accept mult
 Access by literal keys
 ----------------------
 
-The point 3.4 is the last to be resolved: accessing data in `$_GET`, `$_COOKIE`, `$_POST` or `$_FILES` (or more generally, a table built by `parse_str()`) using the literal version of the keys.
+The point 3.4 is the last to be resolved: accessing data in `$_GET`, `$_COOKIE`, `$_POST` or `$_FILES` (or more generally, an array built by `parse_str()`) using the literal version of the keys.
 
 The function we seek to create is therefore at least two input parameters: the looked up literal `$key_name` and an `$input_array` collection built by `parse_str()`. It returns a list of values ​​in `$input_array` that match `$key_name`. In the case where `$key_name` would not be allowed by PHP (see above), the function could return `false` or cause an exception:
 
