@@ -1,5 +1,5 @@
 =========================================
-Improved handling of HTTP requests in PHP
+Advanced handling of HTTP requests in PHP
 =========================================
 
 Version française : https://gist.github.com/1027180
@@ -15,8 +15,9 @@ PHP gives access to HTTP submitted input data through autoglobals:
 - `$_POST` gives access to data present in the body of the request, when they are presented with a content-type handled by PHP, like typically sent by browsers along with the POST method,
 - `$_FILES` gives access to the files uploaded in the body of the request,
 - `$_REQUEST` contains a merge of `$_GET`, `$_POST` and/or `$_COOKIE`.
+- (this behavior can be altered by ini settings `variables_order` and `gpc_order`)
 
-Requests are always issued as described in the HTTP protocol. But the way of accessing the data they contain is of course PHP specific. It is then interesting to analyze the adequacy of the interface offered by PHP and the descriptions allowed by the protocol.
+Requests are issued as described in the HTTP protocol. But the way of accessing the data they contain is of course PHP specific. It is then interesting to analyze the adequacy of the interface offered by PHP and the descriptions allowed by the protocol.
 
 Description of an HTTP request
 ==============================
@@ -71,7 +72,7 @@ The body of the request is to be interpreted according to the *Content-Type* hea
 
 Other content is possible, eg JSON or XML for some web-services (server to server and AJAX).
 
-The type *multipart/form-data* is opaque to PHP developers: only `$_POST` and `$_FILES` are available, without any access to raw data. Other types of content are accessible via the `php://stdin` stream. This point remains to be verified by testing the various SAPI (Apache module, FastCGI, CGI, etc.).
+The type *multipart/form-data* is opaque to PHP developers: only `$_POST` and `$_FILES` are available, without any access to raw data. Other types of content are accessible via the `php://stdin` stream. This point remains to be verified by testing the various SAPI (Apache module, FastCGI, CGI, etc.). Since PHP 5.4, request body processing can be disabled by using the new `disable_post_data_processing` ini setting.
 
 How these arrays are filled is identical to that described above (specific characters altered, brackets in the name of the keys, collisions). They therefore suffer the same defects.
 
@@ -108,13 +109,13 @@ To summarize the previous section, the interface provided by PHP suffers from th
 4. Access to raw data:
   1. no method is referenced to access the raw HTTP headers,
   2. the input to `$_GET` and `$_COOKIE` are in `$_SERVER`,
-  3. `php://stdin` should allow access to the body of the request, but only for content other than *multipart/form-data*.
+  3. `php://stdin` should allow access to the body of the request, but only when the `disable_post_data_processing` ini setting is enabled or for content other than *multipart/form-data*.
 
 Destroying `$_REQUEST` as soon as possible to avoid any temptation to use it solves item 1.1. Anyway, its portability is limited by *php.ini*.
 
 Item 4.1 makes it impossible to fix defects 2.1 and 2.2. Point 2.3 is inherent in how PHP works.
 
-If point 4.3 is proved, then a change in *Content-Type: multipart/form-data* by the web server could be used to circumvent the opacity of PHP for this particular type. However, this solution requires writing and parsing the content in PHP. When a large file is transferred, it is embarrassing to monopolize the server with such a process. In addition, this is unlikely to be portable because it requires changing the configuration of the web server. This solution therefore seems not viable.
+Point 4.3 requires writing and parsing the request body in PHP. When a large file is transferred, it is embarrassing to monopolize the server with such a process. In addition, this is unlikely to be portable because it requires changing the configuration of the web server. This therefore seems not viable as a general solution.
 
 If 4.3 is not working, altered data in `$_POST` and `$_FILES` are the only one available to access input data. For the sake of consistency, despite 4.2, rebuilding `$_GET` and `$_COOKIE` from their raw data does not seem a good idea. However, here is an implementation that can analyze a raw string like `$_SERVER['HTTP_COOKIE']`:
 
