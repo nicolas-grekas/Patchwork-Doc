@@ -40,6 +40,8 @@ HTTP headers
 
 For each key/value header pair, PHP creates an `$_SERVER['HTTP_KEY']` index containing the raw value. This index is created by putting the original key in capital then altering certain non-alphanumeric characters. To the extent that the name of the header is case insensitive and special characters do not carry specific information, this transformation does not hide any useful information. As `$_SERVER` is an array, it can not contain two identical index. However, nothing prevents the same key to be present several times in the headers. As this situation may not occur (except in certain targeted attacks) this limitation has no practical consequence. Note also that two headers may be different but identical for PHP after transformation as described above.
 
+The `getallheaders()` function is an other mean to fetch HTTP request headers, which is only available when using Apache SAPI (or FastCGI since PHP5.4). It returns key => value pairs, so duplicate headers still collide.
+
 Cookies and URL parameters
 --------------------------
 
@@ -107,7 +109,7 @@ To summarize the previous section, the interface provided by PHP suffers from th
   3. non-semantic collision created by the bracketed syntax and by items 2.1 and 3.1,
   4. complexity introduced by the bracketed syntax.
 4. Access to raw data:
-  1. no method is referenced to access the raw HTTP headers,
+  1. no method is referenced to access the raw HTTP headers, but `getallheaders()` can help when available,
   2. the input to `$_GET` and `$_COOKIE` are in `$_SERVER`,
   3. `php://stdin` should allow access to the body of the request, but only when the `disable_post_data_processing` ini setting is enabled or for content other than *multipart/form-data*.
 
