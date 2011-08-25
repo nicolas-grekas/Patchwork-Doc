@@ -115,7 +115,7 @@ Le point 1.1 est soluble de façon trivial en détruisant la variable le plus t�
 
 Le point 4.1 rend impossible toute tentative d'améliorer les défauts 2.1 et 2.2. Le point 2.3 est inhérent à la manière de fonctionner de PHP.
 
-Le point 4.3 nécessite réécrire et surtout d'exécuter en PHP l'interprétation du contenu. Lorsqu'un fichier lourd est transféré, il est gênant de monopoliser ainsi un processus serveur. De plus, elle a peu de chance d'être portable car elle nécessite de modifier la configuration du serveur web. Cette solution semble donc peu viable dans le cas général.
+Le point 4.3 nécessite de réécrire et surtout d'exécuter en PHP l'interprétation du contenu. Lorsqu'un fichier lourd est transféré, il est gênant de monopoliser ainsi un processus serveur. De plus, elle a peu de chance d'être portable car elle nécessite de modifier la configuration du serveur web. Cette solution semble donc peu viable dans le cas général.
 
 Si 4.3 n'est pas opérationnel, les données altérées présentes dans `$_POST` et `$_FILES` sont les seules à disposition pour accéder aux données de formulaires. Par soucis d'homogénéité et accessoirement de performance, et ce malgré 4.2, reconstruire un équivalent à `$_GET` et `$_COOKIE` à partir de leurs données brutes ne semble pas non plus une bonne idée. Voici cependant une implémentation qui permet d'analyser une chaîne brute telle que `$_SERVER['HTTP_COOKIE']` :
 
