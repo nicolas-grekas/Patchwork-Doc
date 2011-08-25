@@ -40,6 +40,8 @@ Entêtes HTTP
 
 Pour chaque couple d'entête clef/valeur, PHP crée un index `$_SERVER['HTTP_CLEF']` qui en contient la valeur brute. Cet index est créé en mettant la clef d'origine en majuscule, et en altérant certains caractères non alphanumériques. Dans la mesure où le nom des entêtes est insensible à la casse et que ces caractères spéciaux ne portent pas d'information particulière, cette transformation n'est pas limitante pour accéder à la totalité de l'information utile. `$_SERVER` étant un tableau, il ne peut pas contenir deux index identiques. Pourtant, rien n'empêche une même clef d'être présente plusieurs fois dans les entêtes. Cette situation ne se produisant jamais (sauf dans certaines attaques ciblées) cette limitation n'a pas de conséquence pratique. Noter également que deux entêtes peuvent être différentes à l'origine mais identiques après transformation par PHP tel que décrit ci-dessus.
 
+La fonction `getallheaders()` est un autre moyen d'accéder aux entêtes HTTP. Elle n'est disponible qu'avec la SAPI Apache (et FastCGI depuis PHP5.4). Elle retourne une liste de clef => valeur, les entêtes répétées entrent donc toujours en collision.
+
 Cookies et paramètres de l'URL
 ------------------------------
 
@@ -107,7 +109,7 @@ Pour résumer la section précédente, l'interface fournie par PHP souffre des d
   3. collision non-sémantique créée par la syntaxe à crochets et par les points 2.1 et 3.1,
   4. complexité apportée par la syntaxe à crochets.
 4. Accès aux données brutes :
-  1. aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes,
+  1. aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes, sauf partiellement via `getallheader()` lorsque la fonction est disponible,
   2. les données qui alimentent `$_GET` et `$_COOKIE` sont dans `$_SERVER`,
   3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que *multipart/form-data* ou lorsque le paramètre ini `disable_post_data_processing` est activé.
 
