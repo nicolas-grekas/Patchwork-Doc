@@ -15,7 +15,7 @@ PHP repose sur des variables auto-globales pour faciliter l'accès aux données 
 - `$_POST` donne accès aux données présentes dans le corps de la requête, lorsqu'elles sont encodées selon un type mime géré par PHP, tel que typiquement envoyé par les navigateurs avec la méthode POST,
 - `$_FILES` donne accès aux fichiers transférés avec le corps de la requête,
 - `$_REQUEST` contient une agrégation paramétrable de `$_GET`, `$_POST` et/ou `$_COOKIE`.
-- (ce comportement peut-êthis behavior can be altered by ini settings `variables_order` and `gpc_order`)
+- (ce comportement peut-être ajusté au moyen des paramètres ini `variables_order` et `gpc_order`)
 
 Si les requêtes sont toutes effectuées selon un format standard défini dans le protocole HTTP, la manière d'y accéder décrite ci-dessus est évidemment propre à PHP. Il est alors intéressant d'analyser l'adéquation entre cette interface offerte par PHP et les capacités de description du protocole.
 
