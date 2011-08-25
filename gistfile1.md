@@ -1,5 +1,5 @@
 ==========================================
-Gestion améliorée des requêtes HTTP en PHP
+Gestion avancée des requêtes HTTP en PHP
 ==========================================
 
 English version at https://gist.github.com/1028251
@@ -15,6 +15,7 @@ PHP repose sur des variables auto-globales pour faciliter l'accès aux données 
 - `$_POST` donne accès aux données présentes dans le corps de la requête, lorsqu'elles sont encodées selon un type mime géré par PHP, tel que typiquement envoyé par les navigateurs avec la méthode POST,
 - `$_FILES` donne accès aux fichiers transférés avec le corps de la requête,
 - `$_REQUEST` contient une agrégation paramétrable de `$_GET`, `$_POST` et/ou `$_COOKIE`.
+- (ce comportement peut-êthis behavior can be altered by ini settings `variables_order` and `gpc_order`)
 
 Si les requêtes sont toutes effectuées selon un format standard défini dans le protocole HTTP, la manière d'y accéder décrite ci-dessus est évidemment propre à PHP. Il est alors intéressant d'analyser l'adéquation entre cette interface offerte par PHP et les capacités de description du protocole.
 
@@ -71,7 +72,7 @@ Le corps de la requête est à interpréter selon le contenu de l'entête *Conte
 
 D'autres contenus sont possibles, par exemple JSON ou XML pour certains web-services (de serveur à serveur ou AJAX).
 
-Le type *multipart/form-data* est géré de façon opaque par PHP : le développeur n'a accès qu'aux tableaux `$_POST` et `$_FILES`, sans pouvoir accéder aux données brutes. Les autres types de contenus sont accessibles via le flux `php://stdin`. Ce point reste à vérifier en testant les différentes SAPI (module Apache, FastCGI, CGI, etc.).
+Le type *multipart/form-data* est géré de façon opaque par PHP : le développeur n'a accès qu'aux tableaux `$_POST` et `$_FILES`, sans pouvoir accéder aux données brutes. Les autres types de contenus sont accessibles via le flux `php://stdin`. Ce point reste à vérifier en testant les différentes SAPI (module Apache, FastCGI, CGI, etc.). Depuis PHP 5.4, l'analyse du corps de la requête peut-être désactivée via le paramètre ini `disable_post_data_processing`.
 
 La manière dont ces tableaux se remplissent est identique à celle décrite précédemment (caractères particuliers altérés, crochets spéciaux dans le nom des clefs, gestion des collisions). Ils souffrent donc des mêmes défauts.
 
@@ -108,13 +109,13 @@ Pour résumer la section précédente, l'interface fournie par PHP souffre des d
 4. Accès aux données brutes :
   1. aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes,
   2. les données qui alimentent `$_GET` et `$_COOKIE` sont dans `$_SERVER`,
-  3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que *multipart/form-data*.
+  3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que *multipart/form-data* ou lorsque le paramètre ini `disable_post_data_processing` est activé.
 
 Le point 1.1 est soluble de façon trivial en détruisant la variable le plus tôt possible pour éviter toute tentation de s'en servir. De toute façon, la portabilité de `$_REQUEST` est limitée par le *php.ini*.
 
 Le point 4.1 rend impossible toute tentative d'améliorer les défauts 2.1 et 2.2. Le point 2.3 est inhérent à la manière de fonctionner de PHP.
 
-Si le point 4.3 est avéré, alors une modification du *Content-Type: multipart/form-data* par le serveur web pourrait permettre de contourner l'opacité de PHP pour ce type particulier. Pourtant, cette solution nécessite de réécrire et surtout d'exécuter en PHP l'interprétation du contenu. Lorsqu'un fichier lourd est transféré, il est gênant de monopoliser ainsi un processus serveur. De plus, elle a peu de chance d'être portable car elle nécessite de modifier la configuration du serveur web. Cette solution semble donc peu viable.
+Le point 4.3 nécessite réécrire et surtout d'exécuter en PHP l'interprétation du contenu. Lorsqu'un fichier lourd est transféré, il est gênant de monopoliser ainsi un processus serveur. De plus, elle a peu de chance d'être portable car elle nécessite de modifier la configuration du serveur web. Cette solution semble donc peu viable dans le cas général.
 
 Si 4.3 n'est pas opérationnel, les données altérées présentes dans `$_POST` et `$_FILES` sont les seules à disposition pour accéder aux données de formulaires. Par soucis d'homogénéité et accessoirement de performance, et ce malgré 4.2, reconstruire un équivalent à `$_GET` et `$_COOKIE` à partir de leurs données brutes ne semble pas non plus une bonne idée. Voici cependant une implémentation qui permet d'analyser une chaîne brute telle que `$_SERVER['HTTP_COOKIE']` :
 
