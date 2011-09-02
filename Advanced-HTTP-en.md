@@ -265,7 +265,7 @@ Until PHP natively provides another interface freed from these problems, a diffe
 Appendix: Reference Implementation
 ----------------------------------
 
-See https://gist.github.com/1027180#file_http_query_field.php for a class resulting from this reflection. It is to be used like this :
+See [HttpQueryField](https://github.com/nicolas-grekas/Patchwork/blob/7c0c6a8437663acf1d0d51e8fbfa1cbd5899f20e/boot/http/class/Patchwork/HttpQueryField.php) for a class resulting from this reflection. It is to be used like this :
 
 ```php
 <?php
