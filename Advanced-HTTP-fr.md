@@ -265,7 +265,7 @@ En attendant que PHP propose nativement une solution à ces défauts, une interf
 Annexe : implémentation de référence
 ------------------------------------
 
-La classe ci-dessous implémente le code qui résulte de cette réflexion. Chaque instance représente une seule clef à la fois, et est à utiliser ainsi par exemple :
+La classe [HttpQueryField](https://github.com/nicolas-grekas/Patchwork/blob/7c0c6a8437663acf1d0d51e8fbfa1cbd5899f20e/boot/http/class/Patchwork/HttpQueryField.php) implémente le code qui résulte de cette réflexion. Chaque instance représente une seule clef à la fois, et est à utiliser ainsi par exemple :
 
 ```php
 <?php
