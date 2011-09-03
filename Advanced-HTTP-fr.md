@@ -74,7 +74,7 @@ Le corps de la requête est à interpréter selon le contenu de l'entête *Conte
 
 D'autres contenus sont possibles, par exemple JSON ou XML pour certains web-services (de serveur à serveur ou AJAX).
 
-Le type *multipart/form-data* est géré de façon opaque par PHP : le développeur n'a accès qu'aux tableaux `$_POST` et `$_FILES`, sans pouvoir accéder aux données brutes. Les autres types de contenus sont accessibles via le flux `php://stdin`. Ce point reste à vérifier en testant les différentes SAPI (module Apache, FastCGI, CGI, etc.). Depuis PHP 5.4, l'analyse du corps de la requête peut-être désactivée via le paramètre ini `disable_post_data_processing`.
+Le type *multipart/form-data* est géré de façon opaque par PHP : le développeur n'a accès qu'aux tableaux `$_POST` et `$_FILES`, sans pouvoir accéder aux données brutes. Les autres types de contenus sont accessibles via le flux `php://stdin`. Ce point reste à vérifier en testant les différentes SAPI (module Apache, FastCGI, CGI, etc.). Depuis PHP 5.4, l'analyse du corps de la requête peut-être désactivée en désactivant le paramètre ini `enable_post_data_reading`.
 
 La manière dont ces tableaux se remplissent est identique à celle décrite précédemment (caractères particuliers altérés, crochets spéciaux dans le nom des clefs, gestion des collisions). Ils souffrent donc des mêmes défauts.
 
@@ -111,7 +111,7 @@ Pour résumer la section précédente, l'interface fournie par PHP souffre des d
 4. Accès aux données brutes :
   1. aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes, sauf partiellement via `getallheader()` lorsque la fonction est disponible,
   2. les données qui alimentent `$_GET` et `$_COOKIE` sont dans `$_SERVER`,
-  3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que *multipart/form-data* ou lorsque le paramètre ini `disable_post_data_processing` est activé.
+  3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais uniquement pour les contenus autres que *multipart/form-data* ou lorsque le paramètre ini `enable_post_data_reading` a été désactivé.
 
 Le point 1.1 est soluble de façon trivial en détruisant la variable le plus tôt possible pour éviter toute tentation de s'en servir. De toute façon, la portabilité de `$_REQUEST` est limitée par le *php.ini*.
 
