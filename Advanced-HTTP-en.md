@@ -70,11 +70,9 @@ However, since the raw information can be found in `$_SERVER`, it is possible to
 Request body
 ------------
 
-The body of the request is to be interpreted according to the *Content-Type* header. HTML defines two possible values: *multipart/form-data* and *application/x-www-form-urlencoded*, also interpreted natively by PHP.
+The body of the request is to be interpreted according to the *Content-Type* header. HTML defines two possible values: *multipart/form-data* and *application/x-www-form-urlencoded*, also interpreted natively by PHP. Other contents are possible, eg JSON or XML for some web-services (server to server and AJAX).
 
-Other content is possible, eg JSON or XML for some web-services (server to server and AJAX).
-
-The type *multipart/form-data* is opaque to PHP developers: only `$_POST` and `$_FILES` are available, without any access to raw data. Other types of content are accessible via the `php://stdin` stream. This point remains to be verified by testing the various SAPI (Apache module, FastCGI, CGI, etc.). Since PHP 5.4, request body processing can be disabled by using the new `disable_post_data_processing` ini setting.
+The type *multipart/form-data* is opaque to PHP developers: only `$_POST` and `$_FILES` are available, without any access to raw data. Other types of content are accessible via the `php://stdin` stream. This point remains to be verified by testing the various SAPI (Apache module, FastCGI, CGI, etc.). Since PHP 5.4, request body processing can be disabled by setting off the `enable_post_data_reading` ini setting.
 
 How these arrays are filled is identical to that described above (specific characters altered, brackets in the name of the keys, collisions). They therefore suffer the same defects.
 
@@ -111,7 +109,7 @@ To summarize the previous section, the interface provided by PHP suffers from th
 4. Access to raw data:
   1. no method is referenced to access the raw HTTP headers, but `getallheaders()` can help when available,
   2. the input to `$_GET` and `$_COOKIE` are in `$_SERVER`,
-  3. `php://stdin` should allow access to the body of the request, but only when the `disable_post_data_processing` ini setting is enabled or for content other than *multipart/form-data*.
+  3. `php://stdin` should allow access to the body of the request, but only when the `enable_post_data_reading` ini setting is set to off or for contents other than *multipart/form-data*.
 
 Destroying `$_REQUEST` as soon as possible to avoid any temptation to use it solves item 1.1. Anyway, its portability is limited by *php.ini*.
 
