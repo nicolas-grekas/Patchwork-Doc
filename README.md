@@ -5,3 +5,14 @@ Here, I plan to structure bits of documentation and articles related to Patchwor
 
 Eventually, the goal is both to fully document Patchwork but also write about general problems
 related to PHP, the Web or anything that maybe in the scope of Patchwork subjects.
+
+What's written to date:
+
+In English:
+
+* [Advanced handling of HTTP requests in PHP](https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-en.md)
+
+En français :
+
+* [Gestion avancée des requêtes HTTP en PHP](https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-fr.md)
+* [Convention pour représenter avec fidélité une variable PHP en JSON](https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Dumping-PHP-Data-fr.md)

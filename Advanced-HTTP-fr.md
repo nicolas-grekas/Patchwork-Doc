@@ -2,7 +2,13 @@
 Gestion avancée des requêtes HTTP en PHP
 ==========================================
 
-English version at https://gist.github.com/1028251
+Nicolas Grekas - nicolas.grekas, gmail.com  
+17 juin 2011 - Dernière mise à jour le 3 sept. 2011
+
+Version française : https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-fr.md  
+English version: https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-en.md  
+
+Voir également : https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/README.md
 
 Introduction
 ============

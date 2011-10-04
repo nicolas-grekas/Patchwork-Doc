@@ -2,7 +2,13 @@
 Advanced handling of HTTP requests in PHP
 =========================================
 
-Version française : https://gist.github.com/1027180
+Nicolas Grekas - nicolas.grekas, gmail.com  
+17 June 2011 - Last updated on 3 sept. 2011
+
+English version: https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-en.md  
+Version française : https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-fr.md  
+
+See also: https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/README.md
 
 Introduction
 ============
@@ -28,7 +34,7 @@ The request itself, in its primary structure, contains three subsections:
 
 1. The first line contains the HTTP method (GET, POST, etc..), the URL and the used protocol version (HTTP/1.1). This line is the only one the web server may need to decide on handing over to PHP. This information is available via `$_SERVER['REQUEST_METHOD']`, `$_SERVER['REQUEST_URI']` and `$_SERVER['SERVER_PROTOCOL']` respectively.
 2. The following lines, as they are not empty, make a list of keys and values: the headers.
-3. The blank line that ends the headers is followed by the body of the request, whose content should be interpreted according to the *Content-Type* header. The body of the request is typically empty for GET requests and containing the values ​​of form fields for POST requests.
+3. The blank line that ends the headers is followed by the body of the request, whose content should be interpreted according to the *Content-Type* header. The body of the request is typically empty for GET requests and containing the values of form fields for POST requests.
 
 Description and limitations of the PHP interface
 ================================================
@@ -47,7 +53,7 @@ Cookies and URL parameters
 
 The *Cookie* header and the URL parameters contain themselves key/value pairs that are available for more comfort with `$_COOKIE` and `$_GET` respectively. The algorithm to go from raw string to an array is exposed by `parse_str()`, which allows for easy observation of the operation:
 
-As with headers, some non-alphanumeric characters of the keys are replaced with an underscore or deleted, the case is preserved, but the unicity of keys still applies. As is common here to need multiple values ​​of the same key, PHP allows you to create arrays from scalar data sources using brackets in the name of the keys. This trick allows to circumvent the unicity limitation by combining all the values ​​of the same key in an array. This syntax can also appoint key to create an array of arrays, in the hope that this makes life easier for developers.
+As with headers, some non-alphanumeric characters of the keys are replaced with an underscore or deleted, the case is preserved, but the unicity of keys still applies. As is common here to need multiple values of the same key, PHP allows you to create arrays from scalar data sources using brackets in the name of the keys. This trick allows to circumvent the unicity limitation by combining all the values of the same key in an array. This syntax can also appoint key to create an array of arrays, in the hope that this makes life easier for developers.
 For example:
 
 ```php
@@ -221,14 +227,14 @@ function test_query_key_name($key_name, &$multivalues_capable = null)
 ?>
 ```
 
-This function can test if a key name is acceptable in PHP, if it can accept multiple values ​​and supports the bracketed syntax (it also illustrates very well the unnecessary complexity introduced by this syntax). If each key name used by an application satisfies this test, then 3.1, 3.2 and 3.3 are solved.
+This function can test if a key name is acceptable in PHP, if it can accept multiple values and supports the bracketed syntax (it also illustrates very well the unnecessary complexity introduced by this syntax). If each key name used by an application satisfies this test, then 3.1, 3.2 and 3.3 are solved.
 
 Access by literal keys
 ----------------------
 
 The point 3.4 is the last to be resolved: accessing data in `$_GET`, `$_COOKIE`, `$_POST` or `$_FILES` (or more generally, an array built by `parse_str()`) using the literal version of the keys.
 
-The function we seek to create is therefore at least two input parameters: the looked up literal `$key_name` and an `$input_array` collection built by `parse_str()`. It returns a list of values ​​in `$input_array` that match `$key_name`. In the case where `$key_name` would not be allowed by PHP (see above), the function could return `false` or cause an exception:
+The function we seek to create is therefore at least two input parameters: the looked up literal `$key_name` and an `$input_array` collection built by `parse_str()`. It returns a list of values in `$input_array` that match `$key_name`. In the case where `$key_name` would not be allowed by PHP (see above), the function could return `false` or cause an exception:
 
 ```php
 <?php
@@ -255,7 +261,7 @@ PHP offers comprehensive autoglobals to access external data sent with each requ
 
 Two problems are particularly troublesome:
 
-1. lack of access to multi-valued keys ​​without using a special syntax,
+1. lack of access to multi-valued keys without using a special syntax,
 2. complexity of the magic bracketed syntax.
 
 Until PHP natively provides another interface freed from these problems, a different interface in user space can circumvent them.
