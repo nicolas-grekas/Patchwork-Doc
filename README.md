@@ -10,9 +10,10 @@ What's written to date:
 
 In English:
 
+* [JSON convention to dump any PHP variable with high fidelity](https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Dumping-PHP-Data-en.md)
 * [Advanced handling of HTTP requests in PHP](https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-en.md)
 
 En français :
 
-* [Gestion avancée des requêtes HTTP en PHP](https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-fr.md)
 * [Convention pour représenter avec fidélité une variable PHP en JSON](https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Dumping-PHP-Data-fr.md)
+* [Gestion avancée des requêtes HTTP en PHP](https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-fr.md)
