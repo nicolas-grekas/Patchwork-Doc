@@ -3,7 +3,7 @@ Advanced handling of HTTP requests in PHP
 =========================================
 
 Nicolas Grekas - nicolas.grekas, gmail.com  
-17 June 2011 - Last updated on 3 sept. 2011
+17 June 2011 - Last updated on jan. 2, 2012
 
 English version: https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-en.md  
 Version française : https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-fr.md  
@@ -25,6 +25,8 @@ PHP gives access to HTTP submitted input data through autoglobals:
 
 Requests are issued as described in the HTTP protocol. But the way of accessing the data they contain is of course PHP specific. It is then interesting to analyze the adequacy of the interface offered by PHP and the descriptions allowed by the protocol.
 
+Note that the `filter` extension introduced in PHP 5.2 adds an other but equivalent way to get HTTP submitted data without going through the above autoglobals.
+
 Description of an HTTP request
 ==============================
 
@@ -44,9 +46,9 @@ Until the first line of the request, all information is available if the server 
 HTTP headers
 ------------
 
-For each key/value header pair, PHP creates an `$_SERVER['HTTP_KEY']` index containing the raw value. This index is created by putting the original key in capital then altering certain non-alphanumeric characters. To the extent that the name of the header is case insensitive and special characters do not carry specific information, this transformation does not hide any useful information. As `$_SERVER` is an array, it can not contain two identical index. However, nothing prevents the same key to be present several times in the headers. As this situation may not occur (except in certain targeted attacks) this limitation has no practical consequence. Note also that two headers may be different but identical for PHP after transformation as described above.
+For each key/value header pair, PHP creates an `$_SERVER['HTTP_KEY']` index containing the raw value. This index is created by putting the original key in capital then altering certain non-alphanumeric characters. To the extent that the name of the header is case insensitive and special characters do not carry specific information, this transformation does not hide any useful information. As `$_SERVER` is an array, it can not contain two identical index. However, nothing prevents the same key to be present several times in the headers. As this situation may not occur (except in certain targeted attacks) this limitation has no practical consequence. Note also that two headers may be different but identical for PHP after transformation as described above. In fact, following the [HTTP RFC](http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2), multiple header fields are often combined into one by the web server.
 
-The `getallheaders()` function is an other mean to fetch HTTP request headers, which is only available when using Apache SAPI (or FastCGI since PHP5.4). It returns key => value pairs, so duplicate headers still collide.
+The `getallheaders()` function is an other mean to fetch HTTP request headers, which is only available when using Apache SAPI (or FastCGI since PHP 5.4). It returns key => value pairs, so duplicate headers still collide.
 
 Cookies and URL parameters
 --------------------------

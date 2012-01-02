@@ -3,7 +3,7 @@ Gestion avancée des requêtes HTTP en PHP
 ==========================================
 
 Nicolas Grekas - nicolas.grekas, gmail.com  
-17 juin 2011 - Dernière mise à jour le 3 sept. 2011
+17 juin 2011 - Dernière mise à jour le 2 jan. 2012
 
 Version française : https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-fr.md  
 English version: https://github.com/nicolas-grekas/Patchwork-Doc/blob/master/Advanced-HTTP-en.md  
@@ -25,6 +25,8 @@ PHP repose sur des variables auto-globales pour faciliter l'accès aux données 
 
 Si les requêtes sont toutes effectuées selon un format standard défini dans le protocole HTTP, la manière d'y accéder décrite ci-dessus est évidemment propre à PHP. Il est alors intéressant d'analyser l'adéquation entre cette interface offerte par PHP et les capacités de description du protocole.
 
+À noter que l'extension `filter` introduite en PHP 5.2 permet d'accéder aux données HTTP sans utiliser les variables auto-globales, mais de façon équivalente pour cette analyse.
+
 Description d'une requête HTTP
 ==============================
 
@@ -44,9 +46,9 @@ Jusqu'à la première ligne de la requête, toutes les informations sont disponi
 Entêtes HTTP
 ------------
 
-Pour chaque couple d'entête clef/valeur, PHP crée un index `$_SERVER['HTTP_CLEF']` qui en contient la valeur brute. Cet index est créé en mettant la clef d'origine en majuscule, et en altérant certains caractères non alphanumériques. Dans la mesure où le nom des entêtes est insensible à la casse et que ces caractères spéciaux ne portent pas d'information particulière, cette transformation n'est pas limitante pour accéder à la totalité de l'information utile. `$_SERVER` étant un tableau, il ne peut pas contenir deux index identiques. Pourtant, rien n'empêche une même clef d'être présente plusieurs fois dans les entêtes. Cette situation ne se produisant jamais (sauf dans certaines attaques ciblées) cette limitation n'a pas de conséquence pratique. Noter également que deux entêtes peuvent être différentes à l'origine mais identiques après transformation par PHP tel que décrit ci-dessus.
+Pour chaque couple d'entête clef/valeur, PHP crée un index `$_SERVER['HTTP_CLEF']` qui en contient la valeur brute. Cet index est créé en mettant la clef d'origine en majuscule, et en altérant certains caractères non alphanumériques. Dans la mesure où le nom des entêtes est insensible à la casse et que ces caractères spéciaux ne portent pas d'information particulière, cette transformation n'est pas limitante pour accéder à la totalité de l'information utile. `$_SERVER` étant un tableau, il ne peut pas contenir deux index identiques. Pourtant, rien n'empêche une même clef d'être présente plusieurs fois dans les entêtes. Cette situation ne se produisant jamais (sauf dans certaines attaques ciblées) cette limitation n'a pas de conséquence pratique. Noter également que deux entêtes peuvent être différentes à l'origine mais identiques après transformation par PHP tel que décrit ci-dessus. En pratique, en accord avec la [RFC HTTP](http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2), les entêtes multiples sont généralement combinée en une par le serveur Web.
 
-La fonction `getallheaders()` est un autre moyen d'accéder aux entêtes HTTP. Elle n'est disponible qu'avec la SAPI Apache (et FastCGI depuis PHP5.4). Elle retourne une liste de clef => valeur, les entêtes répétées entrent donc toujours en collision.
+La fonction `getallheaders()` est un autre moyen d'accéder aux entêtes HTTP. Elle n'est disponible qu'avec la SAPI Apache (et FastCGI depuis PHP 5.4). Elle retourne une liste de clef => valeur, les entêtes répétées entrent donc toujours en collision.
 
 Cookies et paramètres de l'URL
 ------------------------------
