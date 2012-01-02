@@ -73,7 +73,7 @@ foo[]=A&foo[0]=B  => $_GET['foo'] = array(0 => 'B');
 
 If this technique removes the initial restriction, it is based on a semantic confusion: in the above example, `foo`, `foo[]` and `foo[0]` should not collide. This is reflected for instance if you want to access to an HTML form element via `document.getElementsByName()` in the browser: the full name, with the brackets if any, is required. However, PHP side, these variants collide. We can consider here that PHP requires the developer to adopt special agreements to circumvent the internal limitations that the protocol does not have.
 
-However, since the raw information can be found in `$_SERVER`, it is possible to create another interface that does not suffer from this defect.
+However, since the raw information can be found in `$_SERVER`, it is possible to create another interface that does not suffer from this.
 
 Request body
 ------------
@@ -82,7 +82,7 @@ The body of the request is to be interpreted according to the *Content-Type* hea
 
 The type *multipart/form-data* is opaque to PHP developers: only `$_POST` and `$_FILES` are available, without any access to raw data. Other types of content are accessible via the `php://stdin` stream. This point remains to be verified by testing the various SAPI (Apache module, FastCGI, CGI, etc.). Since PHP 5.4, request body processing can be disabled by setting off the `enable_post_data_reading` ini setting.
 
-How these arrays are filled is identical to that described above (specific characters altered, brackets in the name of the keys, collisions). They therefore suffer the same defects.
+How these arrays are filled is identical to that described above (specific characters altered, brackets in the name of the keys, collisions). They therefore suffer the same limitations.
 
 Bracketed syntax: an unnecessary complexity
 -------------------------------------------
@@ -101,7 +101,7 @@ Improving native PHP interface
 Problems and (false) solutions
 --------------------------------
 
-To summarize the previous section, the interface provided by PHP suffers from the following defects:
+To summarize the previous section, the interface provided by PHP suffers from the following limitations:
 
 1. `$ _REQUEST`:
   1. mixing different sources contexts, should never be used.
@@ -121,7 +121,7 @@ To summarize the previous section, the interface provided by PHP suffers from th
 
 Destroying `$_REQUEST` as soon as possible to avoid any temptation to use it solves item 1.1. Anyway, its portability is limited by *php.ini*.
 
-Item 4.1 makes it impossible to fix defects 2.1 and 2.2. Point 2.3 is inherent in how PHP works.
+Item 4.1 makes it impossible to fix 2.1 and 2.2. Point 2.3 is inherent in how PHP works.
 
 Point 4.3 requires writing and parsing the request body in PHP. When a large file is transferred, it is embarrassing to monopolize the server with such a process. In addition, this is unlikely to be portable because it requires changing the configuration of the web server. This therefore seems not viable as a general solution.
 
@@ -150,7 +150,7 @@ function parseQuery($query)
 
 Finally, to avoid breaking the current interface, documentation and customs that go with `$_GET` `$_COOKIE`, `$_POST` or `$_FILES`, their original state as defined by PHP should be kept.
 
-The desired solution should allow to mitigate defects 3.1, 3.2, 3.3 and 3.4 using `$_GET`, `$_COOKIE`, `$_POST` and `$_FILES` as data sources, without modifying them. As a corollary, access to data in PHP and HTML should be done using exactly the same keys.
+The desired solution should allow to mitigate points 3.1, 3.2, 3.3 and 3.4 using `$_GET`, `$_COOKIE`, `$_POST` and `$_FILES` as data sources, without modifying them. As a corollary, access to data in PHP and HTML should be done using exactly the same keys.
 
 Key normalization
 -----------------
@@ -194,7 +194,7 @@ echo is_array($array_result[$key_name])
 
 If the principle of this code is a step in the right direction, it does not work because it does not take into account the specifics of the bracketed syntax.
 
-To account for the syntax, a key name as to be rebuild from the `$array_result` structure as given by `parse_str()` and then compared to `$key_name`. Here is such a function:
+To account for the syntax, a key name has to be rebuild from the `$array_result` structure as given by `parse_str()` and then compared to `$key_name`. Here is such a function:
 
 ```php
 <?php
@@ -271,7 +271,7 @@ Until PHP natively provides another interface freed from these problems, a diffe
 Appendix: Reference Implementation
 ----------------------------------
 
-See [HttpQueryField](https://github.com/nicolas-grekas/Patchwork/blob/7c0c6a8437663acf1d0d51e8fbfa1cbd5899f20e/boot/http/class/Patchwork/HttpQueryField.php) for a class resulting from this reflection. It is to be used like this :
+See [HttpQueryField](https://github.com/nicolas-grekas/Patchwork/blob/master/core/http/class/Patchwork/HttpQueryField.php) for a class resulting from this reflection. It is to be used like this :
 
 ```php
 <?php
