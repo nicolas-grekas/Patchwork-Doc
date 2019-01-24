@@ -188,24 +188,24 @@ Pour résumer la section précédente, l'interface fournie par PHP présente les
 défauts suivants :
 
 1. `$_REQUEST` :
-  1. mélange contextes sources différents, ne devrait jamais être utilisé.
+    1. mélange contextes sources différents, ne devrait jamais être utilisé.
 2. `$_SERVER` :
-  1. majuscules et suppression de caractères particuliers du nom des entêtes,
-  2. collision de noms pour les entêtes répétées,
-  3. dépendance sur le serveur web pour transmettre le contexte de la requête
-    via les variables d'environnement.
+    1. majuscules et suppression de caractères particuliers du nom des entêtes,
+    2. collision de noms pour les entêtes répétées,
+    3. dépendance sur le serveur web pour transmettre le contexte de la requête
+        via les variables d'environnement.
 3. `$_GET`, `$_COOKIE`, `$_POST`, `$_FILES` :
-  1. altération de caractères particuliers du nom des clefs,
-  2. collision de noms pour les clefs à valeurs multiples,
-  3. collision créée par la syntaxe à crochets et par les points 2.1 et 3.1,
-  4. complexité apportée par la syntaxe à crochets.
+    1. altération de caractères particuliers du nom des clefs,
+    2. collision de noms pour les clefs à valeurs multiples,
+    3. collision créée par la syntaxe à crochets et par les points 2.1 et 3.1,
+    4. complexité apportée par la syntaxe à crochets.
 4. Accès aux données brutes :
-  1. aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes, sauf
+    1. aucune méthode n'est référencée pour accéder aux entêtes HTTP brutes, sauf
     partiellement via `getallheader()` lorsque la fonction est disponible,
-  2. les données qui alimentent `$_GET` et `$_COOKIE` sont dans `$_SERVER`,
-  3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais
-    uniquement pour les contenus autres que *multipart/form-data* ou lorsque le
-    paramètre ini `enable_post_data_reading` a été désactivé.
+    2. les données qui alimentent `$_GET` et `$_COOKIE` sont dans `$_SERVER`,
+    3. `php://stdin` devrait permettre d'accéder au corps de la requête, mais
+        uniquement pour les contenus autres que *multipart/form-data* ou lorsque le
+        paramètre ini `enable_post_data_reading` a été désactivé.
 
 Le point 1.1 est soluble de façon trivial en détruisant la variable le plus tôt
 possible pour éviter toute tentation de s'en servir. De toute façon, la
