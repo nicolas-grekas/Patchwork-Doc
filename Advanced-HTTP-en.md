@@ -175,23 +175,23 @@ To summarize the previous section, the interface provided by PHP suffers from
 the following limitations:
 
 1. `$ _REQUEST`:
-  1. mixing different sources contexts, should never be used.
+    1. mixing different sources contexts, should never be used.
 2. `$_SERVER`:
-  1. alteration of particular characters in headers names,
-  2. name collision for repeated headers,
-  3. web server dependency to get request context via environment variables.
+    1. alteration of particular characters in headers names,
+    2. name collision for repeated headers,
+    3. web server dependency to get request context via environment variables.
 3. `$_GET`, `$_COOKIE`, `$_POST`, `$_FILES`:
-  1. alteration of particular characters in keys names,
-  2. name collision for multi-valued keys,
-  3. name collision created by the bracketed syntax and by items 2.1 and 3.1,
-  4. complexity introduced by the bracketed syntax.
+    1. alteration of particular characters in keys names,
+    2. name collision for multi-valued keys,
+    3. name collision created by the bracketed syntax and by items 2.1 and 3.1,
+    4. complexity introduced by the bracketed syntax.
 4. Access to raw data:
-  1. no method is referenced to access the raw HTTP headers,
-    but `getallheaders()` can help when available,
-  2. the input to `$_GET` and `$_COOKIE` are in `$_SERVER`,
-  3. `php://stdin` should allow access to the body of the request, but only when
-    the `enable_post_data_reading` ini setting is set to off or for contents
-    other than *multipart/form-data*.
+    1. no method is referenced to access the raw HTTP headers,
+        but `getallheaders()` can help when available,
+    2. the input to `$_GET` and `$_COOKIE` are in `$_SERVER`,
+    3. `php://stdin` should allow access to the body of the request, but only when
+        the `enable_post_data_reading` ini setting is set to off or for contents
+        other than *multipart/form-data*.
 
 Destroying `$_REQUEST` as soon as possible to avoid any temptation to use it
 solves item 1.1. Anyway, its portability is limited by *php.ini*.
